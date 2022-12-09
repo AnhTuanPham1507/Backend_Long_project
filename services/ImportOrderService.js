@@ -19,11 +19,12 @@ async function create(importOrderDTO, session) {
                 {
                     quantity: detail.quantity,
                     importedAt: importOrderDTO.importedAt,
-                    r_productDetail: detail.r_productDetail
+                    r_productDetail: detail.r_productDetail,
+                    status: detail.consignmentStatus
                 }
             )
+            delete detail.consignmentStatus
         })
-
         await consignmentService.createMany(creatingConsignments, session)
         const createdImportProductDetails = await importOrderDetailService.createMany(details, session)
         const createdImportOrder = await importOrderRepo.create({

@@ -35,6 +35,20 @@ function updateProductDto(id, reqBody) {
     if (validateObjectId(id))
         errMessages.push("Id không hợp lệ")
 
+function getProductByIdDto(id){
+    const errMessages = []
+
+    if (validateObjectId(id))
+        errMessages.push("trường 'id' chưa hợp lệ")
+        
+    if (errMessages.length > 0)
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
+
+
+    return { data: { id } }
+}
+
+module.exports = { createProductDto, getProductByIdDto }
     if (errMessages.length > 0)
         return { errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, "") }
 

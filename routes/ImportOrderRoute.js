@@ -21,6 +21,7 @@ router
             await session.commitTransaction()
             res.status(201).json(createdImportOrder)
         } catch (error) {
+            console.log(error)
             await session.abortTransaction()
 
             if (error instanceof CustomError)
@@ -31,6 +32,14 @@ router
             session.endSession()
         }
 
+    })
+    .get("/", async (req,res) => {
+        try {
+            const importOrders = await importOrderService.getAll()
+            res.status(200).json(importOrders)
+        } catch (error) {
+            return res.status(500).json({message:"Server has something wrong!!"})
+        }
     })
 
 module.exports = { router }

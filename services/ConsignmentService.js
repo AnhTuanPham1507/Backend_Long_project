@@ -49,6 +49,4 @@ async function updateConsignment(updatingConsignmentDto, session) {
     }
 }
 
-
-
 module.exports = { getAll, create, createMany, updateConsignment }

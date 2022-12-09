@@ -1,4 +1,6 @@
 const product = require("../models/ProductModel")
+const getProductAggregate = require("../aggregates/GetProductAggregate")
+const { default: mongoose } = require("mongoose")
 
 const create = async ({ price, name, description, r_category, r_trademark }, session) => {
     const createdProduct = await product.create([{ price, name, description, r_category, r_trademark }], { session })
@@ -8,19 +10,28 @@ const create = async ({ price, name, description, r_category, r_trademark }, ses
     ]).session(session)
 }
 
+const getById = (id) => {
+    const aggregate = getProductAggregate({_id: mongoose.Types.ObjectId(id)})
+    console.log(aggregate)
+    return product.aggregate(aggregate)
+}
+
+const getByCategoryId = (id) => {
+    const aggregate = getProductAggregate({r_category: mongoose.Types.ObjectId(id)})
+    console.log(aggregate)
+    return product.aggregate(aggregate)
+}
+
 const getAll = () => {
-    return product.find({ active: true })
-        .populate([
-            "r_trademark",
-            "r_category",
-            "r_productDetails"
-        ])
+    const aggregate = getProductAggregate()
+    console.log(aggregate)
+    return product.aggregate(aggregate);
 }
 
 const pushOneProductDetail = ({ id, r_productDetail }, session) => {
     return product.findOneAndUpdate(
         { _id: id },
-        { $push: { r_productDetails: r_productDetail}, updatedAt: new Date() },
+        { $push: { r_productDetails: r_productDetail }, updatedAt: new Date() },
         { new: true }
     ).session(session)
 }
@@ -33,5 +44,7 @@ module.exports = {
     create,
     getAll,
     pushOneProductDetail,
+    getById,
+    getByCategoryId,
     updateOne
 }
