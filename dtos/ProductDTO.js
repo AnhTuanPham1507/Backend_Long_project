@@ -7,13 +7,13 @@ function createProductDto(reqBody) {
         errMessages.push("trường 'name' chưa hợp lệ")
     if (validateString(input.price))
         errMessages.push("trường 'price' chưa hợp lệ")
-    if (validateString(input.description))
+    if (input.description != undefined && validateString(input.description))
         errMessages.push("trường 'description' chưa hợp lệ")
     if (validateObjectId(input.r_category))
         errMessages.push("trường 'category' chưa hợp lệ")
     if (validateObjectId(input.r_trademark))
         errMessages.push("trường 'trademark' chưa hợp lệ")
-    if (errMessages.length > 0)
+    if (input.name != undefined && errMessages.length > 0)
         return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
 
 

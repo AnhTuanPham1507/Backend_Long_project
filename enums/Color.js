@@ -7,6 +7,7 @@ module.exports = Object.freeze({
     PINK:"pink",
     RED:"red",
     BLACK:"black",
-    WHITE:"white"
+    WHITE:"white",
+    YELLOW:"yellow"
 })
 
