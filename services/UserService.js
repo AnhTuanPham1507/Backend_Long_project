@@ -28,4 +28,17 @@ async function login(userDTO){
     }
 }
 
-module.exports = {register,login}
+async function update(userDTO, session){
+    try {
+        const updatedUser = await userRepo.updateOne(userDTO, session)
+        return Promise.resolve(updatedUser)
+    } catch (error) {
+        (error)
+        return Promise.reject(new CustomError(error.toString(),500))
+    }
+}
+function deleteOne(id,session) {
+    return userRepo.deleteOne(id,session)
+}
+
+module.exports = {register,login ,update,deleteOne}

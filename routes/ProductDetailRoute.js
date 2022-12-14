@@ -45,7 +45,7 @@ router
             const productDetailDTO = updateProductDetailDto({...req.body,img, id: req.params.id})
             if (productDetailDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(productDetailDTO.errMessage, 400)
-            const updatedproduct = await productDetailService.update({...productDetailDTO.data}, session)
+            const updatedproductDetail = await productDetailService.update({...productDetailDTO.data}, session)
 
             await session.commitTransaction()
             res.status(201).json(updatedproductDetail)

@@ -7,6 +7,7 @@ function createTrademarkDto(reqBody) {
 
     if (validateString(input.name))
         errMessages.push("trường 'name' chưa hợp lệ")
+    console.log(input)
 
     if (errMessages.length > 0)
                 return {errMessage: errMessages.reduce((total,err) => `${total} ${err} ---`,"")}
@@ -32,5 +33,17 @@ function updateTrademarkDto(id, reqBody) {
         data['img'] = input.img
     return { data }
 }
+function deleteTrademarkDto(id) {
+    const errMessages = []
 
-module.exports = { createTrademarkDto , updateTrademarkDto}
+    if (validateObjectId(id))
+        errMessages.push("Id không hợp lệ")
+
+    if (errMessages.length > 0)
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, "") }
+
+    return { data: { id } }
+
+}
+
+module.exports = { createTrademarkDto , updateTrademarkDto , deleteTrademarkDto}

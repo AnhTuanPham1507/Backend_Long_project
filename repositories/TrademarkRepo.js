@@ -21,7 +21,7 @@ const getByName = (trademarkName) => {
 }
 
 const deleteOne = (id,session) => {
-    return trademark.findOneAndUpdate({_id: id},{active:false}).session(session)
+    return trademark.findOneAndUpdate({ _id: id }, { active: false }, { new: true }).session(session)
 }
 
 const updateOne = ({id, name, img },session) =>{

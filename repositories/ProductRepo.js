@@ -35,10 +35,13 @@ const pushOneProductDetail = ({ id, r_productDetail }, session) => {
         { new: true }
     ).session(session)
 }
-
-const updateOne = ({id, name, price,description,r_category,r_trademark },session) => {
-    return product.findOneAndUpdate({ _id: id }, { name,price,description,r_category,r_trademark, updatedAt: new Date()}, { new: true }).session(session)
+const deleteOne = (id,session) => {
+    return product.findOneAndUpdate({ _id: id }, { active: false }, { new: true }).session(session)
 }
+
+    const updateOne = ({id, name, price,description,r_category,r_trademark },session) => {
+        return product.findOneAndUpdate({ _id: id }, { name,price,description,r_category,r_trademark, updatedAt: new Date()}, { new: true }).session(session)
+    }
 
 module.exports = {
     create,
@@ -46,5 +49,6 @@ module.exports = {
     pushOneProductDetail,
     getById,
     getByCategoryId,
-    updateOne
+    updateOne,
+    deleteOne
 }

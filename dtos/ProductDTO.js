@@ -5,7 +5,7 @@ function createProductDto(reqBody) {
 
     if (validateString(input.name))
         errMessages.push("trường 'name' chưa hợp lệ")
-    if (validateString(input.price))
+    if (input.price !== undefined && validateString(input.price))
         errMessages.push("trường 'price' chưa hợp lệ")
     if (input.description != undefined && validateString(input.description))
         errMessages.push("trường 'description' chưa hợp lệ")
@@ -57,4 +57,16 @@ module.exports = { createProductDto, getProductByIdDto }
 return { data }
 }
 
-module.exports = { createProductDto, updateProductDto }
+function deleteProductDto(id) {
+    const errMessages = []
+
+    if (validateObjectId(id))
+        errMessages.push("Id không hợp lệ")
+
+    if (errMessages.length > 0)
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, "") }
+
+    return { data: { id } }
+
+}
+module.exports = { createProductDto, updateProductDto ,deleteProductDto }
