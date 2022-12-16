@@ -19,6 +19,7 @@ function createProductDto(reqBody) {
 
     return { data: { name: input.name, price: input.price, description: input.description, r_category: input.r_category, r_trademark: input.r_trademark } }
 }
+
 function updateProductDto(id, reqBody) {
     const input = reqBody
     const errMessages = []
@@ -30,17 +31,25 @@ function updateProductDto(id, reqBody) {
         errMessages.push("trường 'category' chưa hợp lệ")
     if (input.r_trademark != undefined && validateObjectId(input.r_trademark))
         errMessages.push("trường 'trademark' chưa hợp lệ")
-    if ( input.description != undefined && validateString(input.description))
+    if (input.description != undefined && validateString(input.description))
         errMessages.push("trường 'description' chưa hợp lệ")
     if (validateObjectId(id))
         errMessages.push("Id không hợp lệ")
 
-function getProductByIdDto(id){
+    if (errMessages.length > 0)
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, "") }
+
+    const data = { id, name: input.name, price: input.price, description: input.description, r_category: input.r_category, r_trademark: input.r_trademark }
+
+    return { data }
+}
+
+function getProductByIdDto(id) {
     const errMessages = []
 
     if (validateObjectId(id))
         errMessages.push("trường 'id' chưa hợp lệ")
-        
+
     if (errMessages.length > 0)
         return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
 
@@ -48,13 +57,4 @@ function getProductByIdDto(id){
     return { data: { id } }
 }
 
-module.exports = { createProductDto, getProductByIdDto }
-    if (errMessages.length > 0)
-        return { errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, "") }
-
-    const data = { id, name: input.name, price: input.price,description: input.description, r_category: input.r_category, r_trademark: input.r_trademark }
-
-return { data }
-}
-
-module.exports = { createProductDto, updateProductDto }
+module.exports = { createProductDto, updateProductDto, getProductByIdDto }

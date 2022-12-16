@@ -29,9 +29,9 @@ async function create(exportOrderDTO, session) {
         },session)
         const createdPayment = await paymentRepo.create({type: exportOrderDTO.paymentType, r_exportOrder: createdExportOrder[0]},session)
         if(exportOrderDTO.paymentType === PAYMENTTYPE.MOMO){
-            const payUrl = await sendRequestMomo({exportOrderId: createdExportOrder[0]._id.toString(), paymentId: createdPayment[0]._id.toString(), totalBill: createdExportOrder[0].totalBill})
+            const data = await sendRequestMomo({exportOrderId: createdExportOrder[0]._id.toString(), paymentId: createdPayment[0]._id.toString(), totalBill: createdExportOrder[0].totalBill})
         
-            return Promise.resolve({payUrl, type: exportOrderDTO.paymentType})
+            return Promise.resolve({data, type: exportOrderDTO.paymentType})
         }
         return Promise.resolve({type: exportOrderDTO.paymentType})
     } catch (error) {

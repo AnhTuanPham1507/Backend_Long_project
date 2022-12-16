@@ -24,8 +24,7 @@ const getByCategoryId = (id) => {
 
 const getAll = () => {
     const aggregate = getProductAggregate()
-    console.log(aggregate)
-    return product.aggregate(aggregate);
+    return product.aggregate(aggregate)
 }
 
 const pushOneProductDetail = ({ id, r_productDetail }, session) => {

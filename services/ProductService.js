@@ -19,7 +19,6 @@ function getByCategoryId(id){
     return productRepo.getByCategoryId(id)
 }
 
-module.exports = {getAll,create, getById, getByCategoryId}
 function update(updateProductDTO, session) {
     return productRepo.updateOne(updateProductDTO,session)
 }
@@ -32,4 +31,4 @@ function deleteOne(id,session) {
 }
 
 
-module.exports = {getAll,create,getById,getByName,update,deleteOne}
+module.exports = {getAll,create,getById,getByName,update,deleteOne, getByCategoryId}
