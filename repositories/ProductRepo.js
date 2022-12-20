@@ -43,11 +43,16 @@ const updateOne = ({id, name, price,description,r_category,r_trademark,imgs },se
         .session(session)
 }
 
+const deleteOne = (id,session) => {
+    return product.findOneAndUpdate({ _id: id }, { active: false }, { new: true }).session(session)
+}
+
 module.exports = {
     create,
     getAll,
     pushOneProductDetail,
     getById,
     getByCategoryId,
-    updateOne
+    updateOne,
+    deleteOne
 }

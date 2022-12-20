@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const router = Router({ mergeParams: true })
 const productService = require("../services/productService")
-const { createProductDto, getProductByIdDto, updateProductDto } = require("../dtos/productDTO")
+const { createProductDto, getProductByIdDto, updateProductDto ,deleteProductDto } = require("../dtos/productDTO")
 const { CustomError } = require("../errors/CustomError")
 
 
@@ -91,14 +91,26 @@ router
 
         }
     })
-    .delete('/:id',(req,res)=>{
-        productService.deleteOne(req.params.id)
-        .then(product=>{
-            return res.status(200).json(product);
-        })
-        .catch(err=>{
-            res.status(400).json({message:err})
-        })
+    .delete("/:id",async (req,res) => {
+        const session = await mongoose.startSession()
+        session.startTransaction()
+        try {
+            const productDTO = deleteProductDto(req.params.id)
+            if (productDTO.hasOwnProperty("errMessage"))
+                throw new CustomError(productDTO.errMessage, 400)
+            await productService.deleteOne(productDTO.data.id, session)
+            await session.commitTransaction()
+            res.status(201).json({message: "xoa thanh cong"})
+        } catch (error) {
+            await session.abortTransaction()
+            session.endSession()
+
+            if (error instanceof CustomError)
+                res.status(error.code).json({ message: error.message })
+            else
+                res.status(500).json({message:"Server has something wrong!!"})
+            console.error(error.toString())
+        }
     })
 
 module.exports = { router }

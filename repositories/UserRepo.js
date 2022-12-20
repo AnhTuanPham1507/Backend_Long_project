@@ -21,11 +21,11 @@ const getByUsername = (username) => {
 }
 
 const deleteOne = (id,session) => {
-    return user.findOneAndUpdate({_id: id},{active:false}).session(session)
+    return user.findOneAndUpdate({_id: id},{active:false},{ new: true }).session(session)
 }
 
-const updateOne = ({id, name, phone, email, address, birthday},session) =>{
-    return user.findOneAndUpdate({_id: id},{name, phone, email, address, birthday, updatedAt: new Date()}, {new:true}).session(session)
+const updateOne = ({id, name, phone, email, address},session) =>{
+    return user.findOneAndUpdate({_id: id},{name, phone, email, address, updatedAt: new Date()}, {new:true}).session(session)
 }
 
 module.exports = {create , getAll, getByEmail, getAllInActive, getByUsername, deleteOne, updateOne}
