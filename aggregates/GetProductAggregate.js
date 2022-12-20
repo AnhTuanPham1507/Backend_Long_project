@@ -1,7 +1,13 @@
-const mongoose = require("mongoose")
+const CONSIGNMENTSTATUS = require("../enums/ConsignmentStatus")
 
-module.exports = (filter) => {
+module.exports = (startFilter, endFilter) => {
     const aggregate = [
+        {
+            $match: {
+                active: true,
+                ...startFilter
+            }
+        },
         {
             $lookup: {
                 from: "categories",
@@ -26,41 +32,42 @@ module.exports = (filter) => {
         },
         {
             $lookup: {
-                from: "productdetails",
-                localField: "r_productDetails",
-                foreignField: "_id",
-                as: "r_productDetails",
+                from: "consignments",
+                localField: "_id",
+                foreignField: "r_product",
+                as: "r_consignments",
                 pipeline: [
                     {
-                        $lookup: {
-                            from: "consignments",
-                            localField: "_id",
-                            foreignField: "r_productDetail",
-                            as: "r_consignment",
-                            pipeline: [
-                                {
-                                    $group: {
-                                        "_id": "$r_productDetail",
-                                        "quantity": { $sum: '$quantity' },
-                                    },
-
-                                }
-                            ]
+                        $match: {
+                            status: {
+                                $in: [CONSIGNMENTSTATUS.IN_STOCK, CONSIGNMENTSTATUS.COMMING_OUT_OF_STOCK]
+                            }
+                        }
+                    },
+                    {
+                        $group: {
+                            "_id": "$size",
+                            "size": {$first: "$size"},
+                            "quantity": { $sum: '$quantity' },
                         },
                     },
                     {
-                        $unwind: { path: "$r_consignment" },
+                        $project: {
+                            "size":1,
+                            "quantity":1
+                        }
                     }
                 ],
-            },
+            }
         },
-
+        {
+            $match: {
+                "r_consignments.0": {
+                    $exists: true
+                },
+                ...endFilter
+            }
+        }
     ]
-
-    if (filter) {
-        aggregate.unshift({
-            $match: filter
-        })
-    }
     return aggregate
 }

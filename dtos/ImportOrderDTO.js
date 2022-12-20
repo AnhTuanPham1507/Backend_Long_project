@@ -8,6 +8,7 @@ function createImportOrderDto(reqBody) {
 
     if (validateNumber(input.totalPrice) && input.totalPrice < 0)
         errMessages.push("trường 'totalPrice' chưa hợp lệ")
+    
     if (validateArray(input.r_importDetails)) {
         errMessages.push("array 'r_importDetails' chưa hợp lệ")
         input.details = []

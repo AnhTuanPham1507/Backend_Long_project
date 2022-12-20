@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const SIZEENUM = require("../enums/Size")
 const abstractModel = require('./AbstractModel')
 
 const importOrderDetailSchema = new mongoose.Schema({
@@ -13,10 +14,14 @@ const importOrderDetailSchema = new mongoose.Schema({
         require: "trướng 'price' bắt buộc phải truyển",
         min: 0
     },
-    r_productDetail: {
+    r_product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "productDetail"
+        ref: "product"
     },
+    size: {
+        type: Number,
+        enum: SIZEENUM
+    }
 })
 
 const importOrder = mongoose.model("importOrderDetail", importOrderDetailSchema)

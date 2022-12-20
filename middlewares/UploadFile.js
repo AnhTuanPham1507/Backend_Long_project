@@ -41,6 +41,14 @@ const upload = multer({
     }
 }).single('img')
 
+const uploadMul = multer({
+    storage:storage,
+    limits:{fileSize:10000000},
+    fileFilter: (req,file,cb)=>{
+        fileFilter(file,cb)
+    }
+}).array('imgs')
+
 const uploadFile = (req,res,next)=>{
     upload(req,res , (err)=>{
         if(err instanceof multer.MulterError){
@@ -55,4 +63,18 @@ const uploadFile = (req,res,next)=>{
     })
 }
 
-module.exports = {uploadFile}
+const uploadFiles = (req,res,next)=>{
+    uploadMul(req,res , (err)=>{
+        if(err instanceof multer.MulterError){
+            res.status(500).json({message:err})
+        }
+        else if(err){
+            res.status(400).json({message:err})
+        }
+        else{
+            next()
+        }
+    })
+}
+
+module.exports = {uploadFile, uploadFiles}

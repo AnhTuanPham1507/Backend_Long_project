@@ -7,13 +7,14 @@ const { CustomError } = require("../errors/CustomError")
 
 const { default: mongoose } = require('mongoose')
 const product = require('../models/ProductModel')
+const { uploadFiles } = require('../middlewares/UploadFile')
 
 router
-    .post("/", async (req, res) => {
+    .post("/", uploadFiles, async (req, res) => {
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
-            const productDTO = createProductDto({ ...req.body })
+            const productDTO = createProductDto({ ...req.body, imgs: req.files ? req.files.map(file => file.filename): [] })
             if (productDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(productDTO.errMessage, 400)
             const createdproduct = await productService.create({ ...productDTO.data }, session)
@@ -34,11 +35,11 @@ router
         }
     })
 
-    .put("/:id", async (req, res) => {
+    .put("/:id", uploadFiles, async (req, res) => {
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
-            const productDTO = updateProductDto(req.params.id, req.body)
+            const productDTO = updateProductDto(req.params.id, { ...req.body, imgs: req.files ? req.files.map(file => file.filename): undefined })
             if (productDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(productDTO.errMessage, 400)
             const updatedProduct = await productService.update({...productDTO.data}, session)

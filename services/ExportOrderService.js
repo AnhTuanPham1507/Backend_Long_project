@@ -12,7 +12,7 @@ async function create(exportOrderDTO, session) {
         const updatingQuantityConsignmentPromise = []
         details.forEach(detail => {
             updatingQuantityConsignmentPromise.push(
-                consignmentService.updateConsignment({r_productDetail: detail.r_productDetail, quantity: detail.quantity},session)
+                consignmentService.updateConsignment({r_product: detail.r_product,size: detail.size,  quantity: detail.quantity},session)
             )
         })
 
@@ -29,11 +29,11 @@ async function create(exportOrderDTO, session) {
         },session)
         const createdPayment = await paymentRepo.create({type: exportOrderDTO.paymentType, r_exportOrder: createdExportOrder[0]},session)
         if(exportOrderDTO.paymentType === PAYMENTTYPE.MOMO){
-            const data = await sendRequestMomo({exportOrderId: createdExportOrder[0]._id.toString(), paymentId: createdPayment[0]._id.toString(), totalBill: createdExportOrder[0].totalBill})
+            const payUrl = await sendRequestMomo({exportOrderId: createdExportOrder[0]._id.toString(), paymentId: createdPayment[0]._id.toString(), totalBill: createdExportOrder[0].totalBill})
         
-            return Promise.resolve({data, type: exportOrderDTO.paymentType})
+            return Promise.resolve({payUrl, type: exportOrderDTO.paymentType})
         }
-        return Promise.resolve({type: exportOrderDTO.paymentType})
+        return Promise.resolve({payUrl:"/order", type: exportOrderDTO.paymentType})
     } catch (error) {
         (error)
         return Promise.reject(new CustomError(error.toString(),500))

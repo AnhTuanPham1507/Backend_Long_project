@@ -16,9 +16,9 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    r_productDetails: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "productDetail"
+    imgs: [{
+        type: String,
+        default: ""
     }],
     r_category: {
         type: mongoose.Schema.Types.ObjectId,
@@ -30,6 +30,6 @@ const productSchema = new mongoose.Schema({
     }
 })
 
-const product = mongoose.model("product",productSchema)
+const product = mongoose.model("product", productSchema)
 
 module.exports = product

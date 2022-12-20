@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const abstractModel  = require("./AbstractModel")
 const CONSIGNMENTSTATUS = require("../enums/ConsignmentStatus")
+const SIZEENUM = require("../enums/Size")
 
 const consignmentSchema = new mongoose.Schema({
     ...abstractModel,
@@ -18,9 +19,13 @@ const consignmentSchema = new mongoose.Schema({
         enum: Object.values(CONSIGNMENTSTATUS).map(v => v),
         default: "new"
     },
-    r_productDetail: {
+    r_product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "productDetail"
+        ref: "product"
+    },
+    size: {
+        type: Number,
+        enum: SIZEENUM
     }
 })
 

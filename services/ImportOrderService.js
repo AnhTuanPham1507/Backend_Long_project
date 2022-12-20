@@ -1,5 +1,4 @@
 const importOrderRepo = require('../repositories/ImportOrderRepo')
-const productDetailRepo = require("../repositories/ProductDetailRepo")
 
 const importOrderDetailService = require("./ImportOrderDetailService")
 const consignmentService = require("./ConsignmentService")
@@ -19,7 +18,8 @@ async function create(importOrderDTO, session) {
                 {
                     quantity: detail.quantity,
                     importedAt: importOrderDTO.importedAt,
-                    r_productDetail: detail.r_productDetail,
+                    r_product: detail.r_product,
+                    size: detail.size,
                     status: detail.consignmentStatus
                 }
             )

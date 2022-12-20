@@ -1,5 +1,6 @@
 const { validateNumber, validateString, validateEnum } = require("../validation/validation")
 const  CONSIGNMENTSTATUS = require('../enums/ConsignmentStatus')
+const SIZEENUM = require("../enums/Size")
 
 function createImportOrderDetailDto(reqBody, index) {
     const input = reqBody
@@ -12,8 +13,12 @@ function createImportOrderDetailDto(reqBody, index) {
     if (validateNumber(input.price) && input.price < 0) {
         errMessages.push(`trường 'importOrderDetail.price' tại index ${index} chưa hợp lệ`)
     }
-    if (validateString(input.r_productDetail)) {
-        errMessages.push(`trường 'importOrderDetail.r_productDetail' tại index ${index} chưa hợp lệ`)
+    if (validateString(input.r_product)) {
+        errMessages.push(`trường 'importOrderDetail.r_product' tại index ${index} chưa hợp lệ`)
+    }
+
+    if (validateEnum(SIZEENUM, input.size)) {
+        errMessages.push(`trường 'importOrderDetail.size' tại index ${index} chưa hợp lệ`)
     }
 
     if (validateEnum(CONSIGNMENTSTATUS, input.consignmentStatus)) {
@@ -24,7 +29,7 @@ function createImportOrderDetailDto(reqBody, index) {
         return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
 
 
-    return { data: { quantity: input.quantity, price: input.price, r_productDetail: input.r_productDetail, consignmentStatus: input.consignmentStatus } }
+    return { data: { quantity: input.quantity, price: input.price, r_product: input.r_product, consignmentStatus: input.consignmentStatus, size: input.size } }
 }
 
 module.exports = { createImportOrderDetailDto }

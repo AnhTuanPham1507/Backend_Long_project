@@ -13,12 +13,7 @@ const create = async ({ totalPrice, r_importOrderDetails, r_user }, session) => 
             path: "r_importOrderDetails",
             select: "_id quantity price",
             populate: {
-                path: "r_productDetail",
-                select: "_id color size",
-                populate: {
-                    path: "r_product",
-                    select: "_id name"
-                }
+                path: "r_product",
             }
         })
         .select("_id totalPrice")
@@ -34,16 +29,12 @@ const getAll = () => {
         })
         .populate({
             path: "r_importOrderDetails",
-            select: "_id quantity price",
+            select: "_id quantity price size",
             populate: {
-                path: "r_productDetail",
-                select: "_id color size",
-                populate: {
-                    path: "r_product",
-                    select: "_id name"
-                }
+                path: "r_product",
             }
-        }).select("_id totalPrice")
+        })
+        .select("_id totalPrice")
 }
 
 module.exports = { create, getAll }

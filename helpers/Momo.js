@@ -68,7 +68,7 @@ async function sendRequestMomo({ exportOrderId, paymentId, totalBill }) {
             req.write(requestBody);
             req.end();
         })
-        return Promise.resolve(requestMomo)
+        return Promise.resolve(requestMomo.payUrl)
     } catch (error) {
         console.log(error)
         return Promise.reject(new CustomError(error.toString(), 500))

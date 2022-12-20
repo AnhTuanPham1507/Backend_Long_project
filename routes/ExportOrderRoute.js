@@ -16,7 +16,7 @@ router
             const exportOrderDTO = createExportOrderDto(req.body)
             if (exportOrderDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(exportOrderDTO.errMessage, 400)
-            exportOrderDTO.data['r_user'] = "637cc28f2ea02c00042523d2"
+            exportOrderDTO.data['r_user'] = "63a08b17e1f2ffd6da41be96"
             const result = await exportOrderService.create(exportOrderDTO.data, session)
             if(result)
                 await session.commitTransaction()

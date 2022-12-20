@@ -2,14 +2,6 @@ const { CustomError } = require('../errors/CustomError')
 const consignmentRepo = require('../repositories/ConsignmentRepo')
 const CONSIGNMENTSTATUS = require('../enums/ConsignmentStatus')
 
-function getAll() {
-    return consignmentRepo.getAll()
-}
-
-function create(consignmentDTO, session) {
-
-    return consignmentRepo.create(consignmentDTO, session)
-}
 
 function createMany(consignments, session) {
 
@@ -18,9 +10,9 @@ function createMany(consignments, session) {
 
 async function updateConsignment(updatingConsignmentDto, session) {
     try {
-        const { r_productDetail, quantity } = updatingConsignmentDto
+        const { r_product,size,  quantity } = updatingConsignmentDto
         let myQuantity = quantity
-        const foundConsignments = await consignmentRepo.findByProductDetailId(r_productDetail, session)
+        const foundConsignments = await consignmentRepo.findByProductAndSize({r_product,size}, session)
         if (foundConsignments.reduce((total, item) => total + item.quantity, 0) >= myQuantity) {
             // use some to loop until myquantity equal 0
             foundConsignments.some(consignment => {
@@ -49,4 +41,4 @@ async function updateConsignment(updatingConsignmentDto, session) {
     }
 }
 
-module.exports = { getAll, create, createMany, updateConsignment }
+module.exports = { createMany, updateConsignment }

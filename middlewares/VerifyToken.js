@@ -5,11 +5,12 @@ const verifyToken = (req,res,next) => {
     if (!token)
         return res.status(403).json({ message: "chưa truyền token" })
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)   
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        if(!decoded.id)
+            return res.status(401).json({ message: "token hết hạn, xin đăng nhập lại" })
         req.user = decoded
         return next()
     } catch (error) {
-        (error.toString())
         return res.status(401).json({ message: "token không hợp lệ" })
     }
 }
