@@ -28,4 +28,8 @@ const updateOne = ({id, name, phone, email, address},session) =>{
     return user.findOneAndUpdate({_id: id},{name, phone, email, address, updatedAt: new Date()}, {new:true}).session(session)
 }
 
-module.exports = {create , getAll, getByEmail, getAllInActive, getByUsername, deleteOne, updateOne}
+const updatePassword = ({id, password},session) =>{
+    return user.findOneAndUpdate({_id: id},{password, updatedAt: new Date()}, {new:true}).session(session)
+}
+
+module.exports = {create , getAll, getByEmail, getAllInActive, getByUsername, deleteOne, updateOne, updatePassword}

@@ -1,11 +1,14 @@
 const { CustomError } = require('../errors/CustomError')
 const userRepo = require('../repositories/UserRepo')
+const forgotPasswordRepo = require("../repositories/ForgotPasswordRepo")
 const bcrypt = require("bcrypt")
 const { signToken } = require('../helpers/signToken')
+const FORGOTPASSWORDSTATUS = require("../enums/ForgotPasswordStatus")
 
 async function register(userDTO, session){
     try {
-        const createdUser =  await userRepo.create(userDTO, session)
+        const hashPassword = await bcrypt.hashSync(userDTO.password, 10)
+        const createdUser =  await userRepo.create({...userDTO, password: hashPassword}, session)
         const signedToken = signToken(createdUser)
         return Promise.resolve(signedToken)
     } catch (error) {
@@ -33,12 +36,27 @@ async function update(userDTO, session){
         const updatedUser = await userRepo.updateOne(userDTO, session)
         return Promise.resolve(updatedUser)
     } catch (error) {
-        (error)
         return Promise.reject(new CustomError(error.toString(),500))
     }
 }
+
+async function updateNewPassword(userDTO, session){
+    try {
+        const updateForgotPassword = await forgotPasswordRepo.updateStatus({id: userDTO.token, status: FORGOTPASSWORDSTATUS.VERIFIED}, session)
+        const hashPassword = await bcrypt.hashSync(userDTO.password, 10)
+        await userRepo.updatePassword({id: updateForgotPassword.r_user, password: hashPassword},session)
+        return Promise.resolve()
+    } catch (error) {
+        return Promise.reject(new CustomError(error.toString(),500))
+    }
+}
+
 function deleteOne(id,session) {
     return userRepo.deleteOne(id,session)
 }
 
-module.exports = {register,login ,update,deleteOne}
+function getByEmail(email) {
+    return userRepo.getByEmail(email)
+}
+
+module.exports = {getByEmail, register,login ,update, updateNewPassword, deleteOne}

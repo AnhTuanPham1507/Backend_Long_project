@@ -1,4 +1,4 @@
-const { validateString, validateEmail, validatePhone, validateEnum ,validateObjectId} = require("../validation/validation")
+const { validateString, validateEmail, validatePhone, validateEnum, validateObjectId } = require("../validation/validation")
 const USERROLEENUM = require("../enums/UserRole")
 
 function createUserDto(reqBody) {
@@ -22,7 +22,7 @@ function createUserDto(reqBody) {
         errMessages.push("trường 'role' chưa hợp lệ")
 
     if (errMessages.length > 0)
-                return {errMessage: errMessages.reduce((total,err) => `${total} ${err} ---`,"")}
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
 
     return {
         data: {
@@ -53,7 +53,7 @@ function updateUserDto(reqBody) {
     if (errMessages.length > 0)
         return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
 
-    const data = { name: input.name, email: input.email, phone: input.phone ,address: input.address }
+    const data = { name: input.name, email: input.email, phone: input.phone, address: input.address }
     return { data }
 }
 
@@ -67,11 +67,44 @@ function loginUserDto(reqBody) {
         errMessages.push("trường 'password' chưa hợp lệ")
 
     if (errMessages.length > 0)
-                return {errMessage: errMessages.reduce((total,err) => `${total} ${err} ---`,"")}
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
     return {
         data: {
             username: input.username,
             password: input.password,
+        }
+    }
+}
+
+function forgotPasswordUserDto(reqBody) {
+    const input = reqBody
+    const errMessages = []
+
+    if (validateEmail(input.email))
+        errMessages.push("trường 'email' chưa hợp lệ")
+    if (errMessages.length > 0)
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
+    return {
+        data: {
+            email: input.email
+        }
+    }
+}
+
+function updateNewPasswordDto(reqBody) {
+    const input = reqBody
+    const errMessages = []
+
+    if (validateString(input.password))
+        errMessages.push("trường 'password' chưa hợp lệ")
+    if (validateObjectId(input.token))
+        errMessages.push("trường 'token' chưa hợp lệ")
+    if (errMessages.length > 0)
+        return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }
+    return {
+        data: {
+            password: input.password,
+            token: input.token
         }
     }
 }
@@ -88,4 +121,4 @@ function deleteUserDto(id) {
     return { data: { id } }
 
 }
-    module.exports = { createUserDto, loginUserDto, updateUserDto,deleteUserDto}
+module.exports = { createUserDto, loginUserDto, updateUserDto, deleteUserDto, forgotPasswordUserDto,updateNewPasswordDto }
