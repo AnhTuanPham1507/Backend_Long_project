@@ -11,12 +11,12 @@ const create = async ({ price, name, description, r_category, r_trademark,imgs }
 }
 
 const getById = (id) => {
-    const aggregate = getProductAggregate({_id: mongoose.Types.ObjectId(id)},{})
+    const aggregate = getProductAggregate({_id: mongoose.Types.ObjectId(id)})
     return product.aggregate(aggregate)
 }
 
 const getByCategoryId = (id) => {
-    const aggregate = getProductAggregate({r_category: mongoose.Types.ObjectId(id)},{})
+    const aggregate = getProductAggregate({"r_category._id": mongoose.Types.ObjectId(id)})
     return product.aggregate(aggregate)
 }
 

@@ -42,14 +42,22 @@ router
             return res.status(500).json({message:"Server has something wrong!!"})
         }
     })
+    .get("/byUser", verifyToken,async (req, res) => {
+        try {
+          const foundOrders = await exportOrderService.getByUserId(req.user.id)
+          return res.status(200).json(foundOrders);
+        } catch (error) {
+          return res.status(500).json(error.toString());
+        }
+      })
     .put("/:id", async (req, res) => {
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
-            const exportOrderDTO = updateExportOrderDto(req.params.id,{...req.body})
+            const exportOrderDTO = updateExportOrderDto(req.params.id,req.body)
             if (exportOrderDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(exportOrderDTO.errMessage, 400)
-            const updatedExportOrder = await exportOrderService.update({...exportOrderDTO.data}, session)
+            const updatedExportOrder = await exportOrderService.update(exportOrderDTO.data, session)
             console.log(updatedExportOrder)
             await session.commitTransaction()
             res.status(200).json(updatedExportOrder)

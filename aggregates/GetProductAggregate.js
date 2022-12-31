@@ -1,13 +1,7 @@
 const CONSIGNMENTSTATUS = require("../enums/ConsignmentStatus")
 
-module.exports = (startFilter, endFilter) => {
+module.exports = (filter) => {
     const aggregate = [
-        {
-            $match: {
-                active: true,
-                ...startFilter
-            }
-        },
         {
             $lookup: {
                 from: "categories",
@@ -62,10 +56,11 @@ module.exports = (startFilter, endFilter) => {
         },
         {
             $match: {
+                active: true,
                 "r_consignments.0": {
                     $exists: true
                 },
-                ...endFilter
+                ...filter
             }
         }
     ]

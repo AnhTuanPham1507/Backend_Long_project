@@ -38,8 +38,9 @@ function updateProductDto(id, reqBody) {
     if (errMessages.length > 0)
         return { errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, "") }
 
-    const data = { id, name: input.name, price: input.price, description: input.description, r_category: input.r_category, r_trademark: input.r_trademark, imgs: input.imgs }
-
+    const data = { id, name: input.name, price: input.price, description: input.description, r_category: input.r_category, r_trademark: input.r_trademark }
+    if(input.imgs.length > 0)
+        data["imgs"] = input.imgs
     return { data }
 }
 

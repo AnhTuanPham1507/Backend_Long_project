@@ -39,7 +39,7 @@ router
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
-            const productDTO = updateProductDto(req.params.id, { ...req.body, imgs: req.files ? req.files.map(file => file.filename): undefined })
+            const productDTO = updateProductDto(req.params.id, { ...req.body, imgs: req.files.map(file => file.filename)})
             if (productDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(productDTO.errMessage, 400)
             const updatedProduct = await productService.update({...productDTO.data}, session)

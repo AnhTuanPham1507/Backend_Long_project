@@ -56,13 +56,13 @@ function updateExportOrderDto(id, reqBody) {
 
     if (errMessages.length > 0)
         return {
-        errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, ""),
+            errMessage: errMessages.reduce((total, err) => `${total} ${err}---`, ""),
         };
 
     return {
         data: {
-        status: input.status,
-        id: input.id
+            status: input.status,
+            id
         },
     };
 }

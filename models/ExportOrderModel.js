@@ -18,6 +18,10 @@ const exportOrderSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isRated: {
+        type: Boolean,
+        default: false
+      },
     r_user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
