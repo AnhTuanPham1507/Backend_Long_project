@@ -5,7 +5,6 @@ const notificationRepo = require("../repositories/NotificationRepo")
 const consignmentService = require('./ConsignmentService')
 const PAYMENTTYPE = require('../enums/PaymentType')
 const ORDERSTATUS = require('../enums/ExportOrderStatus.js')
-const NOTIFICATIONCONTENT = require("../enums/NotificationContent");
 const NOTIFICATIONTYPE = require("../enums/NotificationType");
 const { CustomError } = require('../errors/CustomError')
 const { sendRequestMomo } = require('../helpers/Momo')
@@ -61,7 +60,7 @@ async function update(exportOrderDTO, session) {
         if ([ORDERSTATUS.NEW, ORDERSTATUS.SHIPPING].includes(tempFoundOrder.status) && updateExportOrderDto.status === ORDERSTATUS.FALIED) {
             updatedOrder = await exportOrderRepo.updateStatus(exportOrderDTO, session)
             await notificationRepo.create({
-                content: NOTIFICATIONCONTENT.FAILED_ORDER,
+                
                 type: NOTIFICATIONTYPE.FAILED_ORDER,
                 r_order: tempFoundOrder._id
             }, session)
@@ -70,7 +69,7 @@ async function update(exportOrderDTO, session) {
         else if (ORDERSTATUS.NEW === tempFoundOrder.status && exportOrderDTO.status === ORDERSTATUS.SHIPPING) {
             updatedOrder = await exportOrderRepo.updateStatus(exportOrderDTO, session)
             await notificationRepo.create({
-                content: NOTIFICATIONCONTENT.SHIPPING_ORDER,
+                
                 type: NOTIFICATIONTYPE.SHIPPING_ORDER,
                 r_order: tempFoundOrder._id
             }, session)
@@ -78,13 +77,16 @@ async function update(exportOrderDTO, session) {
 
         else if (ORDERSTATUS.SHIPPING === tempFoundOrder.status && exportOrderDTO.status === ORDERSTATUS.SUCCESS) {
             updatedOrder = await exportOrderRepo.updateStatus(exportOrderDTO, session)
+            if(!tempFoundOrder.isPaid)
+                return Promise.reject(new CustomError("Đơn hàng chưa được thanh toán",400))
             await notificationRepo.create({
-                content: NOTIFICATIONCONTENT.SUCCESS_ORDER,
+                
                 type: NOTIFICATIONTYPE.SUCCESS_ORDER,
                 r_order: tempFoundOrder._id
             }, session)
+        } else {
+            return Promise.reject(new CustomError("Bạn không thể thay đổi trạng thái đơn hàng này",400))
         }
-        console.log(updatedOrder)
         return Promise.resolve(updatedOrder)
     } catch (error) {
         (error)

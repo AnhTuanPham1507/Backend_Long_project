@@ -8,6 +8,10 @@ const importOrderSchema = new mongoose.Schema({
         require: "trướng 'totalPrice' bắt buộc phải truyển",
         min: 0
     },
+    importedAt: {
+        type: Date,
+        default: Date.now
+    },
     r_importOrderDetails: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "importOrderDetail"
@@ -18,6 +22,6 @@ const importOrderSchema = new mongoose.Schema({
     }
 })
 
-const importOrder = mongoose.model("importOrder",importOrderSchema)
+const importOrder = mongoose.model("importOrder", importOrderSchema)
 
 module.exports = importOrder

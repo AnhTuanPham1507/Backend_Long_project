@@ -9,6 +9,9 @@ const {router:importOrderRoute} = require('./ImportOrderRoute')
 const {router:exportOrderRoute} = require('./ExportOrderRoute')
 const {router:momoRoute} = require('./MomoRoute')
 const {router:rateRoute} = require('./RateRoute')
+const { router: statisticRouter } = require("./StatictisRoute");
+const { router: notificationRouter } = require("./NotificationRoute");
+
 
 router.use('/category',categoryRouter)
 router.use('/trademark',trademarkRouter)
@@ -18,5 +21,7 @@ router.use('/importOrder',importOrderRoute)
 router.use('/exportOrder',exportOrderRoute)
 router.use('/momo',momoRoute)
 router.use('/rate',rateRoute)
+router.use("/statistic", statisticRouter);
+router.use("/notification", notificationRouter);
 
 module.exports = router

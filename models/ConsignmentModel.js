@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const abstractModel  = require("./AbstractModel")
+const abstractModel = require("./AbstractModel")
 const CONSIGNMENTSTATUS = require("../enums/ConsignmentStatus")
 const SIZEENUM = require("../enums/Size")
 
@@ -8,11 +8,11 @@ const consignmentSchema = new mongoose.Schema({
     quantity: {
         type: Number,
         required: "trường 'quantity' bắt buộc phải truyền",
-        min: 1
+        min: 0
     },
     importedAt: {
         type: Date,
-        require: true
+        default: Date.now
     },
     status: {
         type: String,

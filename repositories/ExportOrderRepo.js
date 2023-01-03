@@ -55,4 +55,5 @@ const getByUserId = (id) => {
         })
         .select("_id totalBill address status isPaid name phone email createdAt")
 }
+
 module.exports = { create, updateStatus, getAll, getById, getByUserId}

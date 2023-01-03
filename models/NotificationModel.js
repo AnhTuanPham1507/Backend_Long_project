@@ -8,10 +8,6 @@ const notificationSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    content: {
-        type: String,
-        require: true
-    },
     type: {
         type: String,
         enum: Object.values(NOTIFICATIONSTATUS).map(v => v),

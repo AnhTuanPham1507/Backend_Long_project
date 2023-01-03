@@ -3,6 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const router = require('./routes/Index')
+const schedule = require('./cronjob/autoCreateNotification')
 
 const app = express()
 const port  = process.env.PORT | 3003
@@ -27,5 +28,10 @@ app.use(cors({
 app.use('/',router)
 app.listen(port , () =>{
     (`Port ${port}`)
+    schedule.start()
 })
+
+app.on('exit',() => {
+    schedule.destroy()
+  })
 

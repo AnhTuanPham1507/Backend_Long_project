@@ -1,4 +1,4 @@
-const { validateNumber, validateArray } = require("../validation/validation")
+const { validateNumber, validateArray, validateDate } = require("../validation/validation")
 const { createImportOrderDetailDto } = require("./ImportOrderDetailDTO")
 
 function createImportOrderDto(reqBody) {
@@ -8,7 +8,8 @@ function createImportOrderDto(reqBody) {
 
     if (validateNumber(input.totalPrice) && input.totalPrice < 0)
         errMessages.push("trường 'totalPrice' chưa hợp lệ")
-    
+    if (validateDate(input.importedAt))
+        errMessages.push("trường 'importedAt' chưa hợp lệ");
     if (validateArray(input.r_importDetails)) {
         errMessages.push("array 'r_importDetails' chưa hợp lệ")
         input.details = []
@@ -28,7 +29,7 @@ function createImportOrderDto(reqBody) {
     if (errMessages.length > 0)
         return { errMessage: errMessages.reduce((err, index) => `${index}: ` + err + "\n") }
 
-    return { data: { totalPrice: input.totalPrice, r_importOrderDetails: details } }
+    return { data: { totalPrice: input.totalPrice, r_importOrderDetails: details,importedAt: input.importedAt } }
 }
 
 module.exports = { createImportOrderDto }

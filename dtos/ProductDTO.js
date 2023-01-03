@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose")
 const { validateString, validateObjectId, validateNumber } = require("../validation/validation")
 function createProductDto(reqBody) {
     const input = reqBody
@@ -76,4 +77,50 @@ function deleteProductDto(id) {
     return { data: { id } }
 
 }
-module.exports = { createProductDto, updateProductDto, getProductByIdDto, deleteProductDto }
+
+function productFilterDto(filter) {
+    const myFilter = {}
+    Object.entries(filter).forEach(([key, value]) => {
+      switch (key) {
+        case "r_category":
+          if(!validateObjectId(value)){
+            myFilter["r_category._id"] = mongoose.Types.ObjectId(value)
+          }
+          break
+        case "name":
+          if (!validateString(value)) {
+            const queryName = value.trim()
+            const queryNameArr = queryName.split(' ').map(word => ({
+              'name': { $regex: `.*${word}.*`, $options: 'si' }
+            }))
+            myFilter['$or'] = [
+              { 'name': { $regex: `.*${queryName}.*`, $options: 'si' } },
+              { $and: queryNameArr }
+            ]
+          }
+          break;
+        case "r_brand":
+          if (!validateArray(value))
+            myFilter['r_brand.name'] = {
+              $in: value.reduce((arr, v) => {
+                if (!validateString(v))
+                  return [...arr, v]
+                return arr
+              }, [])
+            }
+          break
+        case "size":
+          if (!validateArray(value))
+            myFilter['r_consignments.size'] = {
+              $in: value.reduce((arr, v) => {
+                if (!validateEnum(SIZEENUM, v))
+                  return [...arr, v]
+                return arr
+              },[])
+            }
+          break
+      }
+    })
+    return myFilter
+  }
+module.exports = { createProductDto, updateProductDto, getProductByIdDto, deleteProductDto, productFilterDto }

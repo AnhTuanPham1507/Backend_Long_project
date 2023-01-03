@@ -1,3 +1,4 @@
+const GetCategoryAggregate = require("../aggregates/GetCategoryAggregate")
 const category = require("../models/CategoryModel")
 
 const create = ({ name, img },session) => {
@@ -5,7 +6,9 @@ const create = ({ name, img },session) => {
 }
 
 const getAll = () => {
-    return category.find({ active: true })
+    const myAggregate = GetCategoryAggregate()
+
+    return category.aggregate(myAggregate)
 }
 
 const getById = (id) => {

@@ -1,22 +1,20 @@
 const notification = require("../models/NotificationModel")
+const GetNotificationConsignmentAggregate = require("../aggregates/GetNotificationConsignmentAggregate");
 
 const create = ({ type, content, r_order, r_consignment }, session) => {
     return notification.create([{ type, content, r_order, r_consignment }], { session })
 }
 
-const getAll = () => {
-    return notification.find({ active: true })
-        .populate([
-            {
-                path: "r_order",
-            },
-            {
-                path: 'r_consignment'
-            }
-        ])
-}
-
 const getByOrderIdAndType = ({r_order, type}) => {
     return notification.findOne({r_order,type})
 }
-module.exports = { create, getAll,getByOrderIdAndType }
+
+const getAllByConsignment = () => {
+    const myAggregate = GetNotificationConsignmentAggregate()
+    return notification.aggregate(myAggregate)
+}
+
+const updateIsRead = (id, session) => {
+    return notification.findOneAndUpdate({_id:id},{isRead: true,updatedAt: Date.now()})
+}
+module.exports = { create, getAllByConsignment,getByOrderIdAndType, updateIsRead }

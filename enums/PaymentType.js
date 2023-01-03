@@ -1,5 +1,5 @@
 module.exports = Object.freeze({
-    INPERSON: 'inperson',
+    INPERSON: 'in_person',
     MOMO: 'momo'
 })
 

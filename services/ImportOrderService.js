@@ -30,7 +30,8 @@ async function create(importOrderDTO, session) {
         const createdImportOrder = await importOrderRepo.create({
             totalPrice: importOrderDTO.totalPrice,
             r_importOrderDetails: createdImportProductDetails,
-            r_user: importOrderDTO.r_user
+            r_user: importOrderDTO.r_user,
+            importedAt: importOrderDTO.importedAt,
         }, session)
         return Promise.resolve(createdImportOrder)
 

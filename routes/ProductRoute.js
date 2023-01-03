@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const router = Router({ mergeParams: true })
 const productService = require("../services/productService")
-const { createProductDto, getProductByIdDto, updateProductDto ,deleteProductDto } = require("../dtos/productDTO")
+const { createProductDto, getProductByIdDto, updateProductDto ,deleteProductDto, productFilterDto } = require("../dtos/productDTO")
 const { CustomError } = require("../errors/CustomError")
 
 
@@ -59,12 +59,25 @@ router
 
     .get("/", async (req, res) => {
         try {
-            const products = await productService.getAll()
+            const productFilterDTO = productFilterDto(req.query)
+            const products = await productService.getAll(productFilterDTO)
+            return res.status(200).json(products)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ message: "Server has something wrong!!" })
+        }
+    })
+
+    .get("/admin", async (req, res) => {
+        try {
+            const productFilterDTO = productFilterDto(req.query)
+            const products = await productService.getAllAdminSide(productFilterDTO)
             return res.status(200).json(products)
         } catch (error) {
             res.status(500).json({ message: "Server has something wrong!!" })
         }
     })
+
     .get("/:id", async (req, res) => {
         try {
             const productDTO = getProductByIdDto(req.params.id)

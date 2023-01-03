@@ -9,14 +9,14 @@ const { createExportOrderDto, updateExportOrderDto } = require('../dtos/ExportOr
 const { default: mongoose } = require('mongoose')
 
 router
-    .post("/", async (req, res) => {
+    .post("/",verifyToken,  async (req, res) => {
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
             const exportOrderDTO = createExportOrderDto(req.body)
             if (exportOrderDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(exportOrderDTO.errMessage, 400)
-            exportOrderDTO.data['r_user'] = "63a08b17e1f2ffd6da41be96"
+            exportOrderDTO.data['r_user'] = req.user.id
             const result = await exportOrderService.create(exportOrderDTO.data, session)
             if(result)
                 await session.commitTransaction()
