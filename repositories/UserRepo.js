@@ -5,20 +5,7 @@ const create = ({username, password, name, phone, email, address, birthday, r_ro
 }
 
 const getAll = () => {
-    return user.find({active:true}).populate([
-        {
-          path: "r_role",
-          select: "_id title"
-        },
-        {
-          path: "r_permissions",
-          select: "_id type"
-        }
-      ])
-}
-
-const getAllInActive = () => {
-    return user.find({active:false}).populate([
+    return user.find({}).populate([
         {
           path: "r_role",
           select: "_id title"
@@ -72,4 +59,4 @@ const getById = (id) => {
     return user.findOne({_id:id, active:true}).select("_id name email phone address")
   }
 
-module.exports = {  getById, create , getAll, getByEmail, getAllInActive, getByUsername, deleteOne, updateOne, updatePassword}
+module.exports = {  getById, create , getAll, getByEmail, getByUsername, deleteOne, updateOne, updatePassword}
