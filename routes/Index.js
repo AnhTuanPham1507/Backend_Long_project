@@ -11,7 +11,10 @@ const {router:momoRoute} = require('./MomoRoute')
 const {router:rateRoute} = require('./RateRoute')
 const { router: statisticRouter } = require("./StatictisRoute");
 const { router: notificationRouter } = require("./NotificationRoute");
-
+const { router: consignmentRouter } = require("./ConsignmentRoute");
+const { router: permissionRouter } = require("./PermissionRoute");
+const { router: roleRouter } = require("./RoleRoute");
+const { router: protectedRouter } = require("./ProtectedRoute");
 
 router.use('/category',categoryRouter)
 router.use('/trademark',trademarkRouter)
@@ -23,5 +26,9 @@ router.use('/momo',momoRoute)
 router.use('/rate',rateRoute)
 router.use("/statistic", statisticRouter);
 router.use("/notification", notificationRouter);
+router.use("/consignment", consignmentRouter);
+router.use("/permission", permissionRouter);
+router.use("/role", roleRouter);
+router.use("/protected", protectedRouter);
 
 module.exports = router

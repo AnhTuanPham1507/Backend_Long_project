@@ -1,3 +1,5 @@
+const { default: mongoose } = require("mongoose")
+const GetConsignmentAggregate = require("../aggregates/GetConsignmentAggregate")
 const GetStockProductAggregate = require("../aggregates/GetStockProductAggregate")
 const ConsignmentStatus = require("../enums/ConsignmentStatus")
 const consignment = require("../models/ConsignmentModel")
@@ -8,7 +10,8 @@ const createMany = (creatingConsignments, session) => {
 }
 
 const getAll = () => {
-    return consignment.find({ active: true })
+    const myAggregate = GetConsignmentAggregate()
+    return consignment.aggregate(myAggregate)
 }
 
 const findByProductAndSize = ({ r_product, size }, session) => {
@@ -24,4 +27,16 @@ const getStockConsignment = (session) => {
     return consignment.find({ active: true, status: ConsignmentStatus.IN_STOCK }).session(session)
 }
 
-module.exports = { getAll, createMany, findByProductAndSize, groupByProduct,getStockConsignment }
+const getById = (id,session) => {
+    const myAggregate = GetConsignmentAggregate({_id: mongoose.Types.ObjectId(id)})
+    return consignment.aggregate(myAggregate).session(session)
+  }
+  
+  const updateStatus = async ({id, status},session) => {
+    const updatedConsignment = await consignment.findOneAndUpdate({_id: id},{status, updatedAt: Date.now()}).session(session)
+    const myAggregate = GetConsignmentAggregate({_id: mongoose.Types.ObjectId(updatedConsignment._id)})
+    return consignment.aggregate(myAggregate).session(session)
+  }
+
+  
+module.exports = { getAll, createMany, findByProductAndSize, groupByProduct,getStockConsignment, getById, updateStatus }

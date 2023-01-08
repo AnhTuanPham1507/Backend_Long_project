@@ -1,23 +1,59 @@
 const user  = require("../models/UserModel")
 
-const create = ({username, password, name, phone, email, address, birthday, role},session)=>{
-   return user.create([{username, password, name, phone, email, address, birthday, role}],{session})
+const create = ({username, password, name, phone, email, address, birthday, r_role, r_permissions},session)=>{
+   return user.create([{username, password, name, phone, email, address, birthday, r_role, r_permissions}],{session})
 }
 
 const getAll = () => {
-    return user.find({active:true})
+    return user.find({active:true}).populate([
+        {
+          path: "r_role",
+          select: "_id title"
+        },
+        {
+          path: "r_permissions",
+          select: "_id type"
+        }
+      ])
 }
 
 const getAllInActive = () => {
-    return user.find({active:false})
+    return user.find({active:false}).populate([
+        {
+          path: "r_role",
+          select: "_id title"
+        },
+        {
+          path: "r_permissions",
+          select: "_id type"
+        }
+      ])
 }
 
 const getByEmail = (email) => {
-    return user.findOne({email})
+    return user.findOne({email}).populate([
+        {
+          path: "r_role",
+          select: "_id title"
+        },
+        {
+          path: "r_permissions",
+          select: "_id type"
+        }
+      ])
 }
 
 const getByUsername = (username) => {
-    return user.findOne({username})
+    return user.findOne({username}).populate([
+        {
+          path: "r_role",
+          select: "_id title"
+        },
+        {
+          path: "r_permissions",
+          select: "_id type"
+        }
+      ])
 }
 
 const deleteOne = (id,session) => {
@@ -32,4 +68,8 @@ const updatePassword = ({id, password},session) =>{
     return user.findOneAndUpdate({_id: id},{password, updatedAt: new Date()}, {new:true}).session(session)
 }
 
-module.exports = {create , getAll, getByEmail, getAllInActive, getByUsername, deleteOne, updateOne, updatePassword}
+const getById = (id) => {
+    return user.findOne({_id:id, active:true}).select("_id name email phone address")
+  }
+
+module.exports = {  getById, create , getAll, getByEmail, getAllInActive, getByUsername, deleteOne, updateOne, updatePassword}

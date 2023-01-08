@@ -59,4 +59,8 @@ function getByEmail(email) {
     return userRepo.getByEmail(email)
 }
 
-module.exports = {getByEmail, register,login ,update, updateNewPassword, deleteOne}
+function getById(id) {
+    return userRepo.getById(id);
+  }
+
+module.exports = {getById, getByEmail, register,login ,update, updateNewPassword, deleteOne}

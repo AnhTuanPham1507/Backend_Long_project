@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const abstractModel  = require("./AbstractModel")
+const abstractModel = require("./AbstractModel")
 const USERROLEENUM = require('../enums/UserRole')
 
 const userSchema = new mongoose.Schema({
@@ -29,11 +29,14 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    role: {
-        type: String,
-        enum: Object.values(USERROLEENUM).map(v => v),
-        default: 'Customer'
+    r_role: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "role",
     },
+    r_permissions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "permission",
+    }],
     name: {
         type: String,
         required: "trướng 'name' bắt buộc phải truyển",

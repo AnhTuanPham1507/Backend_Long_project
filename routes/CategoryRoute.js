@@ -6,6 +6,7 @@ const { CustomError } = require("../errors/CustomError")
 const {uploadFile} = require("../middlewares/UploadFile")
 
 const { default: mongoose } = require('mongoose')
+const { verifyToken, verifyByRole } = require('../middlewares/VerifyToken')
 
 router
     .post("/", uploadFile, async (req, res) => {
@@ -61,7 +62,7 @@ router
         }
 
     })
-    .get("/", async (req, res) => {
+    .get("/" ,async (req, res) => {
         try {
             const categories = await categoryService.getAll()
             return res.status(200).json(categories)

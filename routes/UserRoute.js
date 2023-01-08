@@ -3,7 +3,7 @@ const router = Router({ mergeParams: true })
 
 const nodemailer = require("nodemailer")
 const { CustomError } = require('../errors/CustomError')
-const { createUserDto, loginUserDto, updateUserDto, deleteUserDto,forgotPasswordUserDto, updateNewPasswordDto } = require('../dtos/UserDTO')
+const { createUserDto, loginUserDto, updateUserDto, deleteUserDto, forgotPasswordUserDto, updateNewPasswordDto, updateUserDTO } = require('../dtos/UserDTO')
 const userService = require("../services/UserService")
 const forgotPasswordService = require("../services/ForgotPasswordService")
 const { verifyToken } = require("../middlewares/VerifyToken")
@@ -58,25 +58,25 @@ router
             if (!foundCustomer)
                 throw new CustomError("tài khoản với email này không tồn tại", 400)
 
-            const createdForgotPassword = await forgotPasswordService.create({r_user: foundCustomer},session)
+            const createdForgotPassword = await forgotPasswordService.create({ r_user: foundCustomer }, session)
             await session.commitTransaction()
             const transporter = nodemailer.createTransport({
-              host: "smtp.gmail.com",
-              port: 587,
-              secure: false, // true for 465, false for other ports
-              auth: {
-                user: process.env.MY_EMAIL, // generated ethereal user
-                pass: process.env.MY_EMAIL_PASSWORD
-              },
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                    user: process.env.MY_EMAIL, // generated ethereal user
+                    pass: process.env.MY_EMAIL_PASSWORD
+                },
             });
             // send mail with defined transport object
             await transporter.sendMail({
-              from: '"Lão tôn 👻" <phamanhtuan9a531@gmail.com>', // sender address
-              to: userDTO.data.email, // list of receivers
-              subject: "Lấy lại mật khẩu", // Subject line
-              html: `<h1>nhấn vào đường dẫn sau để tạo lại mật khẩu mới <a href="${process.env.UPDATE_NEW_PASSWORD_URL}/${createdForgotPassword[0]._id}">click here</a>`, // html body
+                from: '"Lão tôn 👻" <phamanhtuan9a531@gmail.com>', // sender address
+                to: userDTO.data.email, // list of receivers
+                subject: "Lấy lại mật khẩu", // Subject line
+                html: `<h1>nhấn vào đường dẫn sau để tạo lại mật khẩu mới <a href="${process.env.UPDATE_NEW_PASSWORD_URL}/${createdForgotPassword[0]._id}">click here</a>`, // html body
             });
-            return res.status(201).json({message: "Vui long kiểm tra mail để thực hiện lấy lại mật khẩu"})
+            return res.status(201).json({ message: "Vui long kiểm tra mail để thực hiện lấy lại mật khẩu" })
         } catch (error) {
             await session.abortTransaction()
             session.endSession()
@@ -93,9 +93,9 @@ router
             const userDTO = updateNewPasswordDto(req.body)
             if (userDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(userDTO.errMessage, 400)
-            const updatedUser = await userService.updateNewPassword({...userDTO.data},session)
+            const updatedUser = await userService.updateNewPassword({ ...userDTO.data }, session)
             await session.commitTransaction()
-            return res.status(201).json({message: "cập nhật mật khẩu thành công"})
+            return res.status(201).json({ message: "cập nhật mật khẩu thành công" })
         } catch (error) {
             console.log(error)
             await session.abortTransaction()
@@ -111,7 +111,7 @@ router
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
-            const userDTO = updateUserDto(req.body)
+            const userDTO = updateUserDTO(req.body)
             console.log(userDTO)
             if (userDTO.hasOwnProperty("errMessage"))
                 throw new CustomError(userDTO.errMessage, 400)
@@ -130,11 +130,16 @@ router
         }
     })
 
-    .get("/", verifyToken, (req, res) => {
+    .get("/", verifyToken, async (req, res) => {
         try {
-            const foundUser = userService.getById(req.user.id)
+            const foundUser = await userService.getById(req.user.id)
+            if (!foundUser)
+                throw new CustomError("không tìm thấy thông tin người dùng", 400)
             return res.status(200).json(foundUser)
         } catch (error) {
+            console.log(error)
+            if (error instanceof CustomError)
+                res.status(error.code).json({ message: error.message })
             res.status(500).json({ message: "Server has something wrong!!" })
         }
     })
