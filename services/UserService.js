@@ -4,11 +4,14 @@ const forgotPasswordRepo = require("../repositories/ForgotPasswordRepo")
 const bcrypt = require("bcrypt")
 const { signToken } = require('../helpers/signToken')
 const FORGOTPASSWORDSTATUS = require("../enums/ForgotPasswordStatus")
+const roleRepo = require('../repositories/RoleRepo')
+const Role = require('../enums/Role')
 
 async function register(userDTO, session){
     try {
+        const foundRole = await roleRepo.getByTitle(Role.CUSTOMER)
         const hashPassword = await bcrypt.hashSync(userDTO.password, 10)
-        const createdUser =  await userRepo.create({...userDTO, password: hashPassword}, session)
+        const createdUser =  await userRepo.create({...userDTO, password: hashPassword,r_role: foundRole}, session)
         const signedToken = signToken(createdUser)
         return Promise.resolve(signedToken)
     } catch (error) {
@@ -63,4 +66,8 @@ function getById(id) {
     return userRepo.getById(id);
   }
 
-module.exports = {getById, getByEmail, register,login ,update, updateNewPassword, deleteOne}
+  function getAll() {
+    return userRepo.getAll();
+  }
+
+module.exports = {getById, getByEmail, register,login ,update, updateNewPassword, deleteOne, getAll}

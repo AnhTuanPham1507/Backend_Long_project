@@ -12,6 +12,8 @@ const {
   
     if (validateString(input.username))
       errMessages.push("trường username chưa hợp lệ")
+      if (validateString(input.name))
+      errMessages.push("trường name chưa hợp lệ")
     if (validateString(input.password))
       errMessages.push("trường password chưa hợp lệ");
     if (validatePhone(input.phone))
@@ -37,7 +39,6 @@ const {
         phone: input.phone,
         address: input.address,
         email: input.email,
-        r_permissions: input.r_permissions
       },
     };
   }

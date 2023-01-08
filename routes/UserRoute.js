@@ -129,7 +129,16 @@ router
                 res.status(500).json({ message: "Server has something wrong!!" })
         }
     })
-
+    .get("/all", async (req, res) => {
+        try {
+            const foundUsers = await userService.getAll()
+            return res.status(200).json(foundUsers)
+        } catch (error) {
+            if (error instanceof CustomError)
+                res.status(error.code).json({ message: error.message })
+            res.status(500).json({ message: "Server has something wrong!!" })
+        }
+    })
     .get("/", verifyToken, async (req, res) => {
         try {
             const foundUser = await userService.getById(req.user.id)
