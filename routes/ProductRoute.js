@@ -8,6 +8,7 @@ const { CustomError } = require("../errors/CustomError")
 const { default: mongoose } = require('mongoose')
 const product = require('../models/ProductModel')
 const { uploadFiles } = require('../middlewares/UploadFile')
+const getPaginationOptions = require('../helpers/Pagination')
 
 router
     .post("/", uploadFiles, async (req, res) => {
@@ -59,8 +60,9 @@ router
 
     .get("/", async (req, res) => {
         try {
+            const paginationOptions = getPaginationOptions(req)
             const productFilterDTO = productFilterDto(req.query)
-            const products = await productService.getAll(productFilterDTO)
+            const products = await productService.getAll(productFilterDTO,paginationOptions)
             return res.status(200).json(products)
         } catch (error) {
             console.log(error)

@@ -48,11 +48,11 @@ const {
     if (validateString(input.name))
       errMessages.push("trường name chưa hợp lệ")
     if (validatePhone(input.phone))
-      errMessages.push("trường username chưa hợp lệ")
+      errMessages.push("trường phone chưa hợp lệ")
     if (validateEmail(input.email))
-      errMessages.push("trường username chưa hợp lệ")
+      errMessages.push("trường email chưa hợp lệ")
     if (validateString(input.address))
-      errMessages.push("trường username chưa hợp lệ")
+      errMessages.push("trường address chưa hợp lệ")
   
     if (errMessages.length > 0)
       return { errMessage: errMessages.reduce((total, err) => `${total} ${err} ---`, "") }

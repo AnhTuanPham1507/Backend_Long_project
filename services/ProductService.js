@@ -1,7 +1,7 @@
 const productRepo = require('../repositories/ProductRepo')
 
-function getAll(filter) {
-    return productRepo.getAll(false, filter);
+function getAll(filter, paginationOptions) {
+    return productRepo.getAll(false, filter,paginationOptions);
 }
 
 function getAllAdminSide(filter) {

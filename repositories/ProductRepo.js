@@ -22,13 +22,13 @@ const getByCategoryId = (id) => {
     return product.aggregate(aggregate)
 }
 
-const getAll = (isAdminSide, filter) => {
+const getAll = (isAdminSide, filter, paginationOptions) => {
     if (isAdminSide) {
         const myAggregate = GetProductAdminAggregate(filter)
         return product.aggregate(myAggregate)
     } else {
-        const myAggregate = GetProductAggregate(filter)
-        return product.aggregate(myAggregate)
+        const myAggregate = product.aggregate(GetProductAggregate(filter))
+        return product.aggregatePaginate(myAggregate,paginationOptions)
     }
 };
 
